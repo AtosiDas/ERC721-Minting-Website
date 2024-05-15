@@ -30,10 +30,11 @@ p {
   text-align: center;
   font-weight: 500;
 }
-.button {
+.button,.button1,.button2 ,.button3  {
   margin-top: -10px;
   width: 100%;
 }
+
 .nfts{
   display: flex;
   flex-wrap: wrap;

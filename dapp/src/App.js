@@ -1,12 +1,10 @@
 import "./App.css";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Images from "./components/Images";
-import Web3 from "web3";
-import { ethers, formatEther } from "ethers";
+//import Images from "./components/Images";
+import { ethers } from "ethers";
 
-// var account = null;
-const ABI = [
+const contractABI = [
   {
     inputs: [
       {
@@ -616,51 +614,148 @@ const ABI = [
     type: "function",
   },
 ];
-let provider;
-const ADDRESS = "0xD95814586D1A06c85d64BB61DB26Eae43DEf35D7";
-//const contract = new contract(ADDRESS, ABI, provider);
+
+const contractAddress = "0x4127c0170A1b5B204e8460e257f89c823c5EBf04";
+
 async function connectWallet() {
-  // if (window.ethereum) {
-  //   var web3 = new Web3(Web3.givenProvider || "https://localhost:3000");
-  //   await window.ethereum.send("eth_requestAccounts");
-  //   var accounts = await web3.eth.getAccounts();
-  //   account = accounts[0];
-  //   console.log(account);
-  //   document.getElementById("wallet-address").textContent = account;
-  // var web3 = new Web3(Web3.givenProvider || "https://localhost:3000");
-  let signer = null;
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //console.log(provider);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  //console.log(signer);
+  const address = await signer.getAddress();
+  //console.log(address);
+  document.getElementById("wallet-address").textContent = address;
+  // console.log(await provider.getBalance(address));
+  let balance = await provider.getBalance(address);
+  //console.log(balance);
+  document.getElementById("balance").textContent =
+    ethers.utils.formatEther(balance);
+  document.querySelector("#balance").classList.remove("balance1");
+  document.querySelector(".nfts").classList.remove("balance1");
+  // contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-  let provider;
-  if (window.ethereum == null) {
-    console.log("MetaMask not installed; using read-only defaults");
-    provider = ethers.getDefaultProvider();
-  } else {
-    provider = new ethers.BrowserProvider(window.ethereum);
-    signer = await provider.getSigner();
-    let { address } = signer;
-    //console.log(address);
-    document.querySelector("#wallet-address").innerHTML = address;
-    //console.log(await provider.getBlockNumber());
-    let balance = await provider.getBalance(address);
-    //console.log(formatEther(balance));
-    document.getElementById("balance").classList.remove("balance1");
-    document.getElementById("balance").innerHTML = formatEther(balance);
-    document.querySelector(".nfts").classList.remove("balance1");
-  }
-
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // await provider.send("eth_requestAccounts", []);
-  // var accounts = await web3.eth.getAccounts();
-  // account = accounts[0];
-  // console.log(account);
-  // contract = new web3.eth.Contract(ABI, ADDRESS);
-  // document.getElementById("mint").onClick = async () => {
-  //   var rate = Number(await contract.methods.cost().call());
-  //   contract.methods
-  //     .mint(account, rate)
-  //     .send({ from: account, value: String(rate) });
-  // };
+  // console.log("connected");
+  // console.log(await contract.name());
+  // console.log(await contract.symbol());
 }
+
+async function mint() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //console.log(provider);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  //console.log(signer);
+  const address = await signer.getAddress();
+
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+  console.log("connected");
+  console.log(await contract.name());
+  console.log(await contract.symbol());
+
+  const value = ethers.utils.parseEther("0.02");
+  const tx = await contract.mint(
+    1,
+    "ipfs://QmdQGBnphKaE16b5WVnrJwMv6pWQC7a7uoAYuqzadntAJy",
+    { value: value }
+  );
+  await tx.wait();
+  console.log("minted");
+  document.querySelector(".status").innerHTML = "Minted";
+  let balance = await provider.getBalance(address);
+  document.getElementById("balance").textContent =
+    ethers.utils.formatEther(balance);
+  document.querySelector(".button").classList.add("balance1");
+}
+
+async function mint1() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //console.log(provider);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  //console.log(signer);
+  const address = await signer.getAddress();
+
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+  console.log("connected");
+  console.log(await contract.name());
+  console.log(await contract.symbol());
+
+  const value = ethers.utils.parseEther("0.02");
+  const tx = await contract.mint(
+    2,
+    "ipfs://Qmd2JHCFZPFeKUt72WFHm4HzqJdn2WEZsNHrkbwi3DKwiV",
+    { value: value }
+  );
+  await tx.wait();
+  console.log("minted");
+  document.querySelector(".status1").innerHTML = "Minted";
+  let balance = await provider.getBalance(address);
+  document.getElementById("balance").textContent =
+    ethers.utils.formatEther(balance);
+  document.querySelector(".button1").classList.add("balance1");
+}
+
+async function mint2() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //console.log(provider);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  //console.log(signer);
+  const address = await signer.getAddress();
+
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+  console.log("connected");
+  console.log(await contract.name());
+  console.log(await contract.symbol());
+
+  const value = ethers.utils.parseEther("0.02");
+  const tx = await contract.mint(
+    3,
+    "ipfs://QmYKcBn5ppvMc3duXhiWby77vhSroLR4CNdxU8sSN73Pac",
+    { value: value }
+  );
+  await tx.wait();
+  console.log("minted");
+  document.querySelector(".status2").innerHTML = "Minted";
+  let balance = await provider.getBalance(address);
+  document.getElementById("balance").textContent =
+    ethers.utils.formatEther(balance);
+  document.querySelector(".button2").classList.add("balance1");
+}
+
+async function mint3() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //console.log(provider);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  //console.log(signer);
+  const address = await signer.getAddress();
+
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+  console.log("connected");
+  console.log(await contract.name());
+  console.log(await contract.symbol());
+
+  const value = ethers.utils.parseEther("0.02");
+  const tx = await contract.mint(
+    4,
+    "ipfs://QmRmFFwapsMumBagWbyK1Lp7xuuSFK6iuvfq9KkuvqpRmk",
+    { value: value }
+  );
+  await tx.wait();
+  console.log("minted");
+  document.querySelector(".status3").innerHTML = "Minted";
+  let balance = await provider.getBalance(address);
+  document.getElementById("balance").textContent =
+    ethers.utils.formatEther(balance);
+  document.querySelector(".button3").classList.add("balance1");
+}
+
 function App() {
   return (
     <div className="App">
@@ -673,8 +768,8 @@ function App() {
             <h3>Mint Portal</h3>
             <h4>Please connect your wallet</h4>
             <Button
-              id="wallet"
               onClick={connectWallet}
+              id="wallet"
               style={{ marginBottom: "10px" }}
             >
               Connect Wallet
@@ -692,22 +787,79 @@ function App() {
           </form>
         </div>
         <div className="nfts balance1">
-          <Images
+          <div className="images">
+            <img
+              src="https://bafybeifmlhwvkongrxera6rkjzafjd6cm4mym4zswyqccsywcx2mnygdbi.ipfs.cf-ipfs.com/"
+              alt="cat"
+            />
+            <p style={{ color: "black" }}>#1</p>
+            <p className="status" style={{ color: "black" }}>
+              Price 0.02 ETH each NFT
+            </p>
+            <Button onClick={mint} className="button">
+              Mint the NFT
+            </Button>
+          </div>
+
+          <div className="images">
+            <img
+              src="https://bafybeidune5nt47clf3vde57sw2qkny2s72ovgjxb465jobrcorbqwp2ny.ipfs.cf-ipfs.com/"
+              alt="dog"
+            />
+            <p style={{ color: "black" }}>#2</p>
+            <p className="status1" style={{ color: "black" }}>
+              Price 0.02 ETH each NFT
+            </p>
+            <Button onClick={mint1} className="button1">
+              Mint the NFT
+            </Button>
+          </div>
+
+          <div className="images">
+            <img
+              src="https://bafybeiearpg5u2344b2o4lwth4wnr2pzyam44syprgge3a53fkbk63tdaq.ipfs.cf-ipfs.com/"
+              alt="flower"
+            />
+            <p style={{ color: "black" }}>#3</p>
+            <p className="status2" style={{ color: "black" }}>
+              Price 0.02 ETH each NFT
+            </p>
+            <Button onClick={mint2} className="button2">
+              Mint the NFT
+            </Button>
+          </div>
+
+          <div className="images">
+            <img
+              src="https://bafybeih6ce5ieqmlzv7vvpvpk232uor3g225a6lbbdzqpz7p7va3oajp4i.ipfs.cf-ipfs.com/"
+              alt="lion"
+            />
+            <p style={{ color: "black" }}>#4</p>
+            <p className="status3" style={{ color: "black" }}>
+              Price 0.02 ETH each NFT
+            </p>
+            <Button onClick={mint3} className="button3">
+              Mint the NFT
+            </Button>
+          </div>
+
+          {/* <Images
             Id="1"
             image="https://bafybeifmlhwvkongrxera6rkjzafjd6cm4mym4zswyqccsywcx2mnygdbi.ipfs.cf-ipfs.com/"
-          />
-          <Images
+            uri=""
+          /> */}
+          {/* <Images
             Id="2"
             image="https://bafybeidune5nt47clf3vde57sw2qkny2s72ovgjxb465jobrcorbqwp2ny.ipfs.cf-ipfs.com/"
-          />
-          <Images
+          /> */}
+          {/* <Images
             Id="3"
             image="https://bafybeiearpg5u2344b2o4lwth4wnr2pzyam44syprgge3a53fkbk63tdaq.ipfs.cf-ipfs.com/"
-          />
-          <Images
+          /> */}
+          {/* <Images
             Id="4"
             image="https://bafybeih6ce5ieqmlzv7vvpvpk232uor3g225a6lbbdzqpz7p7va3oajp4i.ipfs.cf-ipfs.com/"
-          />
+          /> */}
         </div>
       </div>
     </div>
